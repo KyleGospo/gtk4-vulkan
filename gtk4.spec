@@ -12,17 +12,19 @@
 
 %global bin_version 4.0.0
 
+%global gtk_version 4.6.5
+
 # Filter provides for private modules
 %global __provides_exclude_from ^%{_libdir}/gtk-4.0
 
 Name:           gtk4
-Version:        4.6.5
+Version:        %{gtk_version}.vulkan
 Release:        1%{?dist}
 Summary:        GTK graphical user interface library
 
 License:        LGPLv2+
 URL:            https://www.gtk.org
-Source0:        https://download.gnome.org/sources/gtk/4.6/gtk-%{version}.tar.xz
+Source0:        https://download.gnome.org/sources/gtk/4.6/gtk-%{gtk_version}.tar.xz
 
 BuildRequires:  cups-devel
 BuildRequires:  desktop-file-utils
@@ -50,6 +52,7 @@ BuildRequires:  pkgconfig(libpng)
 BuildRequires:  pkgconfig(libtiff-4)
 BuildRequires:  pkgconfig(pango) >= %{pango_version}
 BuildRequires:  pkgconfig(rest-0.7)
+BuildRequires:  pkgconfig(vulkan)
 BuildRequires:  pkgconfig(sysprof-4)
 BuildRequires:  pkgconfig(sysprof-capture-4)
 BuildRequires:  pkgconfig(tracker-sparql-3.0)
@@ -122,7 +125,7 @@ Requires: gtk4%{?_isa} = %{version}-%{release}
 This package contains helpful applications for developers using GTK.
 
 %prep
-%autosetup -p1 -n gtk-%{version}
+%autosetup -p1 -n gtk-%{gtk_version}
 
 %build
 export CFLAGS='-fno-strict-aliasing -DG_DISABLE_CAST_CHECKS -DG_DISABLE_ASSERT %optflags'
@@ -135,7 +138,8 @@ export CFLAGS='-fno-strict-aliasing -DG_DISABLE_CAST_CHECKS -DG_DISABLE_ASSERT %
         -Dcolord=enabled \
         -Dgtk_doc=true \
         -Dman-pages=true \
-        -Dinstall-tests=false
+        -Dinstall-tests=false \
+        -Dvulkan=enabled
 
 %meson_build
 
@@ -227,6 +231,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %{_mandir}/man1/gtk4-widget-factory.1*
 
 %changelog
+* Wed Jun 08 2022 Kyle Gospodnetich <me@kylegospodneti.ch> - 4.6.5.vulkan-1
+- Re-enabled vulkan renderer
+
 * Tue May 31 2022 David King <amigadave@amigadave.com> - 4.6.5-1
 - Update to 4.6.5
 
